@@ -25,15 +25,15 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label Margin="2" Grid.Row="0" Grid.Column="0" Content="Carne"/>
-        <TextBox Margin="2" Controls:TextBoxHelper.ClearTextButton="True"  Controls:TextBoxHelper.Watermark="Debe ingrear un carné" Grid.Row="0" Grid.Column="1" Text="{Binding Carne}"/>
+        <TextBox IsReadOnly="{Binding IsReadOnlyCarne}" Margin="2" Controls:TextBoxHelper.ClearTextButton="True"  Controls:TextBoxHelper.Watermark="Debe ingrear un carné" Grid.Row="0" Grid.Column="1" Text="{Binding Carne}"/>
         <Label Margin="2" Grid.Row="1" Grid.Column="0" Content="Nombres"/>
-        <TextBox Margin="2" Controls:TextBoxHelper.ClearTextButton="True"  Controls:TextBoxHelper.Watermark="Debe ingresar un nombre" Grid.Row="1" Grid.Column="1" Text="{Binding Nombres}"></TextBox>
+        <TextBox IsReadOnly="{Binding IsReadOnlyNombres}" Margin="2" Controls:TextBoxHelper.ClearTextButton="True"  Controls:TextBoxHelper.Watermark="Debe ingresar un nombre" Grid.Row="1" Grid.Column="1" Text="{Binding Nombres}"></TextBox>
         <Label Margin="2" Grid.Row="2" Grid.Column="0" Content="Apellidos"></Label>
-        <TextBox Margin="2" Controls:TextBoxHelper.ClearTextButton="True"  Controls:TextBoxHelper.Watermark="Debe ingresar un apellido" Grid.Row="2" Grid.Column="1" Text="{Binding Apellidos}"></TextBox>
+        <TextBox IsReadOnly="{Binding IsReadOnlyApellidos}" Margin="2" Controls:TextBoxHelper.ClearTextButton="True"  Controls:TextBoxHelper.Watermark="Debe ingresar un apellido" Grid.Row="2" Grid.Column="1" Text="{Binding Apellidos}"></TextBox>
         <Label Margin="2" Grid.Row="3" Grid.Column="0" Content="Carrera"></Label>
-        <ComboBox Margin="2" Controls:TextBoxHelper.Watermark="Seleccionar" SelectedItem="{Binding CarreraSeleccionada}" Grid.Row="3" Grid.Column="1" ItemsSource="{Binding ListaCarreras}"></ComboBox>
+        <ComboBox IsEditable="False" IsEnabled="{Binding IsEnableCarrera}" Margin="2" Controls:TextBoxHelper.Watermark="Seleccionar" SelectedItem="{Binding CarreraSeleccionada}" Grid.Row="3" Grid.Column="1" ItemsSource="{Binding ListaCarreras}"></ComboBox>
         <Label Margin="2" Grid.Row="4" Grid.Column="0" Content="Fecha Nacimiento"></Label>
-        <DatePicker Margin="2" SelectedDateFormat="Short" Grid.Row="4" Grid.Column="1" Text="{Binding FechaNacimiento}"></DatePicker>
+        <DatePicker IsEnabled="{Binding IsEnableFechaNacimiento}" Margin="2" SelectedDateFormat="Short" Grid.Row="4" Grid.Column="1" Text="{Binding FechaNacimiento}"></DatePicker>
         <DataGrid SelectedItem="{Binding Elemento}" Margin="10" Style="{StaticResource AzureDataGrid}" ColumnWidth="*" CanUserAddRows="False" Grid.Row="5" Grid.ColumnSpan="2" ItemsSource="{Binding ListaAlumnos}">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn 
@@ -45,8 +45,11 @@
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="2">
-            <Button Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding Instancia}" CommandParameter="Nuevo" Content="Nuevo"></Button>
-            <Button Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding Instancia}" CommandParameter="Eliminar" Content="Eliminar"></Button>
+            <Button Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding Instancia}" CommandParameter="Nuevo" IsEnabled="{Binding IsEnableNuevo}" Content="Nuevo"></Button>
+            <Button Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding Instancia}" CommandParameter="Eliminar" IsEnabled="{Binding IsEnableEliminar}" Content="Eliminar"></Button>
+            <Button Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding Instancia}" CommandParameter="Editar" IsEnabled="{Binding IsEnableEditar}" Content="Editar"></Button>
+            <Button Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding Instancia}" CommandParameter="Guardar" IsEnabled="{Binding IsEnableGuardar}" Content="Guadar"></Button>
+            <Button Style="{StaticResource AccentedSquareButtonStyle}" Command="{Binding Instancia}" CommandParameter="Cancelar" IsEnabled="{Binding IsEnableCancelar}" Content="Cancelar"></Button>
         </StackPanel>
     </Grid>
 </Controls:MetroWindow>

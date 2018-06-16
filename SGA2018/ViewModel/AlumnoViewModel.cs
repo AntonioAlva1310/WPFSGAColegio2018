@@ -8,8 +8,16 @@ using SGA2018.Model;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
 using MahApps.Metro.Controls.Dialogs;
+using System.Data.Entity;
+
 namespace SGA2018.ViewModel
 {
+    enum ACCION
+    {
+        NINGUNO,
+        NUEVO,
+        GUARDAR
+    };
     public class AlumnoViewModel : INotifyPropertyChanged, ICommand
     {
         #region "Datos"
@@ -27,8 +35,73 @@ namespace SGA2018.ViewModel
         private DateTime _fechaNacimiento;
         private Carrera _carreraSeleccionada;
         private AlumnoViewModel _instancia;
+        private bool _isEnableGuardar = false;
+        private bool _isEnableCancelar = false;
+        private bool _isEnableNuevo = true;
+        private bool _isEnableEliminar = true;
+        private bool _isEnableEditar = true;
+        private bool _isReadOnlyCarne = true;
+        private bool _isReadOnlyApellidos = true;
+        private bool _isReadOnlyNombres = true;
+        private bool _isEnableFechaNacimiento = false;
+        private bool _isEnableCarrera = false;
+        private ACCION _accion = ACCION.NINGUNO;
         #endregion
         #region "Propiedades"
+        public bool IsEnableCarrera
+        {
+            get { return _isEnableCarrera; }
+            set { _isEnableCarrera = value; NotificarCambio("IsEnableCarrera"); }
+        }
+
+        public bool IsEnableFechaNacimiento
+        {
+            get { return _isEnableFechaNacimiento; }
+            set { _isEnableFechaNacimiento = value; NotificarCambio("IsEnableFechaNacimiento"); }
+        }
+
+        public bool IsReadOnlyApellidos
+        {
+            get { return _isReadOnlyApellidos; }
+            set { _isReadOnlyApellidos = value; NotificarCambio("IsReadOnlyApellidos"); }
+        }
+
+        public bool IsReadOnlyNombres
+        {
+            get { return _isReadOnlyNombres; }
+            set { _isReadOnlyNombres = value; NotificarCambio("IsReadOnlyNombres"); }
+        }
+
+        public bool IsReadOnlyCarne
+        {
+            get { return _isReadOnlyCarne; }
+            set { _isReadOnlyCarne = value; NotificarCambio("IsReadOnlyCarne"); }
+        }
+        public bool IsEnableEditar
+        {
+            get { return _isEnableEditar; }
+            set { _isEnableEditar = value; NotificarCambio("IsEnableEditar"); }
+        }
+        public bool IsEnableEliminar
+        {
+            get { return _isEnableEliminar; }
+            set { _isEnableEliminar = value; NotificarCambio("IsEnableEliminar"); }
+        }
+        public bool IsEnableNuevo
+        {
+            get { return _isEnableNuevo; }
+            set { _isEnableNuevo = value; NotificarCambio("IsEnableNuevo"); }
+        }
+        public bool IsEnableCancelar
+        {
+            get { return _isEnableCancelar; }
+            set { _isEnableCancelar = value; NotificarCambio("IsEnableCancelar"); }
+        }
+        public bool IsEnableGuardar
+        {
+            get{ return _isEnableGuardar; }
+            set{ _isEnableGuardar = value; NotificarCambio("IsEnableGuardar"); }
+        }
         public Alumno Elemento
         {
             get
@@ -198,18 +271,8 @@ namespace SGA2018.ViewModel
         {
             if (control.Equals("Nuevo"))
             {
-                var registro = new Alumno
-                {
-                    Carne = this.Carne,
-                    Nombres = this.Nombres,
-                    Apellidos = this.Apellidos,
-                    FechaNacimiento = this.FechaNacimiento,
-                    Carrera = this.CarreraSeleccionada
-                };
-                _db.Alumnos.Add(registro);
-                _db.SaveChanges();
-                this.ListaAlumnos.Add(registro);
-            }else if(control.Equals("Eliminar"))
+                ActivarControles();
+            } else if (control.Equals("Eliminar"))
             {
                 if (Elemento != null)
                 {
@@ -219,8 +282,22 @@ namespace SGA2018.ViewModel
                     , MessageDialogStyle.AffirmativeAndNegative);
                     if (resultado == MessageDialogResult.Affirmative)
                     {
-                        _db.Alumnos.Remove(Elemento);
-                        _db.SaveChanges();
+                        try
+                        {
+                            _db.Alumnos.Remove(Elemento);
+                            _db.SaveChanges();
+                            ListaAlumnos.Remove(Elemento);
+                            LimpiarCampos();
+
+                        }
+                        catch (Exception ex)
+                        {
+                            await this._dialogCoordinator.ShowMessageAsync(
+                            this
+                            , "Eliminar Alumno"
+                            , ex.Message);
+                        }
+
                     }
                 }
                 else
@@ -231,6 +308,97 @@ namespace SGA2018.ViewModel
                     , "Debe seleccionar un elemento");
                 }
             }
+            else if (control.Equals("Guardar"))
+            {
+                switch (this._accion)
+                {
+                    case ACCION.NUEVO:
+                        try
+                        {
+                            var registro = new Alumno
+                            {
+                                Carne = this.Carne,
+                                Nombres = this.Nombres,
+                                Apellidos = this.Apellidos,
+                                FechaNacimiento = this.FechaNacimiento,
+                                Carrera = this.CarreraSeleccionada
+                            };
+                            _db.Alumnos.Add(registro);
+                            _db.SaveChanges();
+                            this.ListaAlumnos.Add(registro);                            
+                        }
+                        catch (Exception ex)
+                        {
+                            await this._dialogCoordinator.ShowMessageAsync(
+                            this
+                            , "Guardar Alumno"
+                            , ex.Message);
+                        }
+                        finally
+                        {
+                            DesactivarControles();
+                        }
+                        break;
+                      case ACCION.GUARDAR:
+                        try
+                        {
+                            Elemento.Carrera = this.CarreraSeleccionada;
+                            Elemento.Apellidos = this.Apellidos;
+                            Elemento.Nombres = this.Nombres;
+                            Elemento.FechaNacimiento = this.FechaNacimiento;
+                            _db.Entry(Elemento).State = EntityState.Modified;
+                            _db.Alumnos.Attach(Elemento);
+                            _db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            await this._dialogCoordinator.ShowMessageAsync(
+                            this
+                            , "Editar Alumno"
+                            , ex.Message);
+                        }
+                        break;
+                }
+            }
+        }
+
+        private void DesactivarControles()
+        {
+            this.IsEnableNuevo = true;
+            this.IsEnableEliminar = true;
+            this.IsEnableEditar = true;
+            this.IsEnableGuardar = false;
+            this.IsEnableCancelar = false;
+            this.IsReadOnlyCarne = true;
+            this.IsReadOnlyApellidos = true ;
+            this.IsReadOnlyNombres = true;
+            this.IsEnableCarrera = false;
+            this.IsEnableFechaNacimiento = false;
+            this._accion = ACCION.NINGUNO;
+        }
+
+        private void ActivarControles()
+        {
+            this.IsEnableNuevo = false;
+            this.IsEnableEliminar = false;
+            this.IsEnableEditar = false;
+            this.IsEnableGuardar = true;
+            this.IsEnableCancelar = true;
+            this.IsReadOnlyCarne = false;
+            this.IsReadOnlyApellidos = false;
+            this.IsReadOnlyNombres = false;
+            this.IsEnableCarrera = true;
+            this.IsEnableFechaNacimiento = true;
+            this._accion = ACCION.NUEVO;
+        }
+
+        private void LimpiarCampos()
+        {
+            this.Carne = string.Empty;
+            this.Apellidos = string.Empty;
+            this.Nombres = string.Empty;
+            this.FechaNacimiento = DateTime.Now;
+            this.CarreraSeleccionada = null;
         }
         #endregion
     }
