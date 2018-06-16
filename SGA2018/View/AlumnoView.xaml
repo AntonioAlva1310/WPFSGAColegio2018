@@ -34,7 +34,7 @@
         <ComboBox IsEditable="False" IsEnabled="{Binding IsEnableCarrera}" Margin="2" Controls:TextBoxHelper.Watermark="Seleccionar" SelectedItem="{Binding CarreraSeleccionada}" Grid.Row="3" Grid.Column="1" ItemsSource="{Binding ListaCarreras}"></ComboBox>
         <Label Margin="2" Grid.Row="4" Grid.Column="0" Content="Fecha Nacimiento"></Label>
         <DatePicker IsEnabled="{Binding IsEnableFechaNacimiento}" Margin="2" SelectedDateFormat="Short" Grid.Row="4" Grid.Column="1" Text="{Binding FechaNacimiento}"></DatePicker>
-        <DataGrid SelectedItem="{Binding Elemento}" Margin="10" Style="{StaticResource AzureDataGrid}" ColumnWidth="*" CanUserAddRows="False" Grid.Row="5" Grid.ColumnSpan="2" ItemsSource="{Binding ListaAlumnos}">
+        <DataGrid AutoGenerateColumns="False" SelectedItem="{Binding Elemento}" Margin="10" Style="{StaticResource AzureDataGrid}" ColumnWidth="*" CanUserAddRows="False" Grid.Row="5" Grid.ColumnSpan="2" ItemsSource="{Binding ListaAlumnos}">
             <DataGrid.Columns>
                 <DataGridCheckBoxColumn 
                     ElementStyle="{DynamicResource MetroDataGridCheckBox}"
@@ -42,6 +42,10 @@
                     Header="Seleccionado"
                     Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"
                  />
+                <DataGridTextColumn Binding="{Binding Carne}" Header="CARNE" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding Apellidos}" Header="APELLIDOS" IsReadOnly="False" />
+                <DataGridTextColumn Binding="{Binding Nombres}" Header="NOMBRES" IsReadOnly="False" />
+                <DataGridTextColumn Binding="{Binding Carrera.Descripcion}" Header="CARRERA" IsReadOnly="False" />
             </DataGrid.Columns>
         </DataGrid>
         <StackPanel Margin="10" Orientation="Horizontal" Grid.Row="6" Grid.ColumnSpan="2">

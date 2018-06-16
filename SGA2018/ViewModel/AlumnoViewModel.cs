@@ -272,6 +272,7 @@ namespace SGA2018.ViewModel
             if (control.Equals("Nuevo"))
             {
                 ActivarControles();
+                this._accion = ACCION.NUEVO;
             } else if (control.Equals("Eliminar"))
             {
                 if (Elemento != null)
@@ -337,18 +338,26 @@ namespace SGA2018.ViewModel
                         finally
                         {
                             DesactivarControles();
+                            this._accion = ACCION.NINGUNO;
                         }
                         break;
                       case ACCION.GUARDAR:
                         try
                         {
-                            Elemento.Carrera = this.CarreraSeleccionada;
-                            Elemento.Apellidos = this.Apellidos;
-                            Elemento.Nombres = this.Nombres;
-                            Elemento.FechaNacimiento = this.FechaNacimiento;
-                            _db.Entry(Elemento).State = EntityState.Modified;
-                            _db.Alumnos.Attach(Elemento);
-                            _db.SaveChanges();
+                            int posicion = ListaAlumnos.IndexOf(Elemento);
+                            var registro = _db.Alumnos.Find(Elemento.AlumnoId);
+                            if (registro != null)
+                            {
+                                registro.Carrera = this.CarreraSeleccionada;
+                                registro.Apellidos = this.Apellidos;
+                                registro.Nombres = this.Nombres;
+                                registro.FechaNacimiento = this.FechaNacimiento;
+                                _db.Entry(registro).State = EntityState.Modified;
+                                _db.SaveChanges();
+                                ListaAlumnos.RemoveAt(posicion);
+                                ListaAlumnos.Insert(posicion, registro);
+                            }
+
                         }
                         catch (Exception ex)
                         {
@@ -357,7 +366,28 @@ namespace SGA2018.ViewModel
                             , "Editar Alumno"
                             , ex.Message);
                         }
+                        finally
+                        {
+                            DesactivarControles();
+                            this._accion = ACCION.NINGUNO;
+                        }
                         break;
+                }
+            }
+            else if (control.Equals("Editar"))
+            {
+                if(Elemento != null)
+                { 
+                    ActivarControles();
+                    this.IsReadOnlyCarne = true;
+                    this._accion = ACCION.GUARDAR;
+                }
+                else
+                {
+                    await this._dialogCoordinator.ShowMessageAsync(
+                    this
+                    , "Editar Alumno"
+                    ,"Debe seleccionar un elemento");
                 }
             }
         }
@@ -374,7 +404,6 @@ namespace SGA2018.ViewModel
             this.IsReadOnlyNombres = true;
             this.IsEnableCarrera = false;
             this.IsEnableFechaNacimiento = false;
-            this._accion = ACCION.NINGUNO;
         }
 
         private void ActivarControles()
@@ -389,7 +418,6 @@ namespace SGA2018.ViewModel
             this.IsReadOnlyNombres = false;
             this.IsEnableCarrera = true;
             this.IsEnableFechaNacimiento = true;
-            this._accion = ACCION.NUEVO;
         }
 
         private void LimpiarCampos()
