@@ -11,7 +11,7 @@
         Title="Sistema de control academico" Height="350" Width="525">
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <Button Content="Edwin Tumax" />
+            <Button Content="Marco Bonilla" />
             <Button>
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20"
@@ -34,9 +34,9 @@
                 <Menu>
                     <MenuItem Name="Catalogos" Header="Catalogos">
                         <MenuItem Command="{Binding Instancia}" CommandParameter="Alumnos" Name="Alumnos" Header="Alumnos"/>
-                        <MenuItem Name="Carreras" Header="Carreras"/>
+                        <MenuItem Command="{Binding Instancia}" CommandParameter="Carreras" Name="Carreras" Header="Carreras"/>
                         <MenuItem Name="Salones" Header="Salones"/>
-                        <MenuItem Name="Puestos" Header="Puestos"/>
+                        <MenuItem Command="{Binding Instancia}" CommandParameter="Puestos" Name="Puestos" Header="Puestos"/>
                         <MenuItem Name="Cursos" Header="Cursos"/>
                     </MenuItem>
                     <MenuItem Name="Reportes" Header="Reportes">

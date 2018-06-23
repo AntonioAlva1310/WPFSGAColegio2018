@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Developer\source\repos\SGA2018\SGA2018\obj\Debug\
+C:\Users\USER\Documents\Visual Studio 2017\Projects\WPFSGA2018\SGA2018\obj\Debug\
 SGA2018
 none
 false
 DEBUG;TRACE
-C:\Users\Developer\source\repos\SGA2018\SGA2018\App.xaml
-41489368302
+C:\Users\USER\Documents\Visual Studio 2017\Projects\WPFSGA2018\SGA2018\App.xaml
+6633260869
 
-15-1226605006
-19-1075858206
-MainWindow.xaml;Resources\Icons.xaml;Resources\IconsNonShared.xaml;View\AlumnoView.xaml;
+21-1236572621
+19-579675449
+MainWindow.xaml;Resources\Icons.xaml;Resources\IconsNonShared.xaml;View\AlumnoView.xaml;View\CarreraView.xaml;View\PuestoView.xaml;
 
 False
 

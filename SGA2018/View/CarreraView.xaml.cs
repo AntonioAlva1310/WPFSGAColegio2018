@@ -10,22 +10,28 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SGA2018.ViewModel;
 using MahApps.Metro.Controls;
-namespace SGA2018
+using MahApps.Metro.Controls.Dialogs;
+using SGA2018.ViewModel;
+
+namespace SGA2018.View
 {
     /// <summary>
-    /// Lógica de interacción para MainWindow.xaml
+    /// Lógica de interacción para CarreraView.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class CarreraView : MetroWindow
     {
-        public MainWindow()
+
+
+        public CarreraView()
         {
             InitializeComponent();
-            MainWindowViewModel modelo = new MainWindowViewModel();
-            this.DataContext = modelo;//con este bloque de codigo enlazo el modelo que programe con el contexto de mi ventana principal 
+            CarreraViewModel modelo = new CarreraViewModel(DialogCoordinator.Instance);
+            this.DataContext = modelo;
         }
     }
 }
+
+
+

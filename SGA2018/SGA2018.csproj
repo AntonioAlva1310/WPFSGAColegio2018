@@ -74,10 +74,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\Curso.cs" />
+    <Compile Include="Model\Puesto.cs" />
     <Compile Include="ViewModel\AlumnoViewModel.cs" />
+    <Compile Include="ViewModel\CarreraViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\PuestoViewModel.cs" />
     <Compile Include="View\AlumnoView.xaml.cs">
       <DependentUpon>AlumnoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CarreraView.xaml.cs">
+      <DependentUpon>CarreraView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PuestoView.xaml.cs">
+      <DependentUpon>PuestoView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -100,6 +110,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\AlumnoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CarreraView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PuestoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

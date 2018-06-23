@@ -12,7 +12,7 @@ using System.Data.Entity;
 
 namespace SGA2018.ViewModel
 {
-    enum ACCION
+    enum ACCION    
     {
         NINGUNO,
         NUEVO,
